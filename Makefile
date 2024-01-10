@@ -87,13 +87,13 @@ config:
 	$(info [Create build config])
 	@go mod tidy
 ifeq ($(UNAME_S),Linux)
-	ifeq ($(wildcard $(MUSL_CC)),)
-		@rm -rf /tmp/musl-1.2.4.tar.gz
-		@curl -SfL 'https://musl.libc.org/releases/musl-1.2.4.tar.gz' -o /tmp/musl-1.2.4.tar.gz
-		@tar -zxf /tmp/musl-1.2.4.tar.gz -C $(ROOT_DIR)
-		@cd musl-1.2.4 && ./configure --prefix=$(MUSL_DIR) --syslibdir=$(MUSL_DIR)/syslib && $(MAKE) && $(MAKE) install
-		@rm -rf musl-1.2.4 /tmp/musl-1.2.4.tar.gz
-	endif
+ifeq ($(wildcard $(MUSL_CC)),)
+	@rm -rf /tmp/musl-1.2.4.tar.gz
+	@curl -SfL 'https://musl.libc.org/releases/musl-1.2.4.tar.gz' -o /tmp/musl-1.2.4.tar.gz
+	@tar -zxf /tmp/musl-1.2.4.tar.gz -C $(ROOT_DIR)
+	@cd musl-1.2.4 && ./configure --prefix=$(MUSL_DIR) --syslibdir=$(MUSL_DIR)/syslib && $(MAKE) && $(MAKE) install
+	@rm -rf musl-1.2.4 /tmp/musl-1.2.4.tar.gz
+endif
 endif
 
 .PHONY: generate-pb
