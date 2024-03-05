@@ -52,6 +52,7 @@ MO_VERSION=$(shell git describe --always --tags $(shell git rev-list --tags --ma
 GO_MODULE=$(shell go list -m)
 MUSL_DIR=$(ROOT_DIR)/musl
 MUSL_CC=$(MUSL_DIR)/bin/musl-gcc
+MUSL_VERSION:=1.2.5
 
 # cross compilation has been disabled for now
 ifneq ($(GOARCH)$(TARGET_ARCH)$(GOOS)$(TARGET_OS),)
@@ -116,11 +117,11 @@ build: config cgo
 musl-install:
 ifeq ("$(UNAME_S)","Linux")
  ifeq ("$(wildcard $(MUSL_CC))","")
-	@rm -rf /tmp/musl-1.2.5.tar.gz
-	@curl -SfL 'https://musl.libc.org/releases/musl-1.2.5.tar.gz' -o /tmp/musl-1.2.5.tar.gz
-	@tar -zxf /tmp/musl-1.2.5.tar.gz -C $(ROOT_DIR)
-	@cd musl-1.2.4 && ./configure --prefix=$(MUSL_DIR) --syslibdir=$(MUSL_DIR)/syslib && $(MAKE) && $(MAKE) install
-	@rm -rf musl-1.2.4 /tmp/musl-1.2.5.tar.gz
+	@rm -rf /tmp/musl-$(MUSL_VERSION) musl-$(MUSL_VERSION).tar.gz
+	@curl -SfL "https://musl.libc.org/releases/musl-$(MUSL_VERSION).tar.gz" -o /tmp/musl-$(MUSL_VERSION).tar.gz
+	@tar -zxf /tmp/musl-$(MUSL_VERSION).tar.gz -C $(ROOT_DIR)
+	@cd musl-$(MUSL_VERSION) && ./configure --prefix=$(MUSL_DIR) --syslibdir=$(MUSL_DIR)/syslib && $(MAKE) && $(MAKE) install
+	@rm -rf musl-$(MUSL_VERSION) /tmp/musl-$(MUSL_VERSION).tar.gz
  endif
 endif
 
@@ -218,7 +219,7 @@ clean:
 	rm -f $(BIN_NAME)
 	rm -rf $(ROOT_DIR)/vendor
 	rm -rf $(MUSL_DIR)
-	rm -rf /tmp/musl-1.2.4.tar.gz
+	rm -rf /tmp/musl-$(MUSL_VERSION).tar.gz
 	$(MAKE) -C cgo clean
 
 ###############################################################################
