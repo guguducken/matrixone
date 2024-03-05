@@ -217,6 +217,8 @@ clean:
 	@go clean -testcache
 	rm -f $(BIN_NAME)
 	rm -rf $(ROOT_DIR)/vendor
+	rm -rf $(MUSL_DIR)
+	rm -rf /tmp/musl-1.2.4.tar.gz
 	$(MAKE) -C cgo clean
 
 ###############################################################################
